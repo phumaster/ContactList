@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -16,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView lvListContact;
     ArrayList<Contact> listContact = new ArrayList<Contact>();
     ContactAdapter adapter;
+    public static final int REQUEST_CODE = 14;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 14 && resultCode == RESULT_OK) {
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
-            Contact newContact = new Contact(bundle.get("name").toString(), Integer.parseInt(bundle.get("number").toString()));
+            Contact newContact = (Contact) bundle.getSerializable("newContact");
             listContact.add(newContact);
             adapter.notifyDataSetChanged();
         }
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnAddContact:
                 Intent intent = new Intent(MainActivity.this, AddContact.class);
-                startActivityForResult(intent, 14);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
